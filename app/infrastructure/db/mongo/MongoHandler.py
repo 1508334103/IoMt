@@ -1,4 +1,3 @@
-import os
 from loguru import logger
 from pymongo import MongoClient
 from pymongo.errors import PyMongoError
@@ -123,3 +122,6 @@ class MongoHandler:
             logger.exception(f"Create index failed: {e}")
             return ""
 
+if __name__ == "__main__":
+    mongo_handler = MongoHandler(url="mongodb+srv://root:wzpace3158@king.aniol8r.mongodb.net/?retryWrites=true&w=majority&appName=king", db_name="king")
+    print(mongo_handler.get_collection("equipments"))
