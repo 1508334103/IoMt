@@ -4,7 +4,7 @@ from pymongo.errors import PyMongoError
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 
-class MongoHandler:
+class MongoHandler(object):
     def __init__(self, url: str, db_name: str, **kwargs):
         try:
             self.client = MongoClient(url, **kwargs)

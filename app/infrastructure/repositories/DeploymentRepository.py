@@ -1,17 +1,7 @@
-import os
-import sys
 from typing import Dict, List, Optional, Any
 from bson import ObjectId
 from datetime import datetime, UTC
-
-# 导入路径修正
-current_dir = os.path.dirname(os.path.abspath(__file__))
-backend_dir = os.path.abspath(os.path.join(current_dir, '../../..'))
-if backend_dir not in sys.path:
-    sys.path.insert(0, backend_dir)
-
 from app.infrastructure.repositories.Repository import Repository
-
 
 class DeploymentRepository(Repository):
     """部署仓储类"""
@@ -220,7 +210,6 @@ class DeploymentRepository(Repository):
 
 
 if __name__ == "__main__":
-    import json
 
     # 创建部署仓储实例
     deployment_repo = DeploymentRepository()
@@ -256,7 +245,8 @@ if __name__ == "__main__":
                 }
             ],
             "created_at": "2024-05-01T08:00:00Z",
-            "updated_at": "2024-05-01T10:30:00Z"
+            "updated_at": "2024-05-01T10:30:00Z",
+            "is_deleted": False
         },
         {
             "mission_id": "mission_002",
@@ -273,14 +263,15 @@ if __name__ == "__main__":
             "status": "未开始",
             "feedbacks": [],
             "created_at": "2024-05-03T10:00:00Z",
-            "updated_at": "2024-05-03T10:00:00Z"
+            "updated_at": "2024-05-03T10:00:00Z",
+            "is_deleted": False
         }
     ]
 
     # 插入部署数据
     for deployment_data in deployments_data:
         # 由于部署可能有多个，没有唯一性检查，直接插入
-        deployment_id = deployment_repo.create(deployment_data)
-        print(f"已插入关联任务ID为 {deployment_data['mission_id']} 的部署，部署ID: {deployment_id}")
+        dpi = deployment_repo.create(deployment_data)
+        print(f"已插入关联任务ID为 {deployment_data['mission_id']} 的部署，部署ID: {dpi}")
 
     print("部署数据插入完成！") 

@@ -1,4 +1,5 @@
 from typing import Dict, List, Optional, Any, Union
+from datetime import datetime
 from bson import ObjectId
 from pydantic import BaseModel
 
@@ -44,7 +45,6 @@ class EquipmentRepository(Repository):
     def update_equipment_status(self, equipment_id: str, status: str, changed_by: str,
                                 remark: Optional[str] = None) -> int:
         """更新装备状态并添加历史记录"""
-        from datetime import datetime
 
         history_item = {
             "status": status,
