@@ -5,7 +5,7 @@ from app.domain.models.DomainModel import DomainModel
 
 class HistoryItem(BaseModel):
     status: str = Field(..., description="装备状态")
-    change_at: datetime = Field(..., description="变更时间")
+    changed_at: datetime = Field(..., description="变更时间")
     changed_by: str = Field(..., description="变更操作人")
     remark: Optional[str] = Field(None, description="备注")
 

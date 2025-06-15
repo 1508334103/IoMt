@@ -23,8 +23,10 @@ class PyObjectId(ObjectId):
 
     # 为了让Swagger文档中，显示该字段为string类型
     @classmethod
-    def __modify_schema__(cls, field_schema):
+    def __get_pydantic_json_schema__(cls, field_schema):
         field_schema.update(type="string")
+        return field_schema
+
 
 class DomainModel(BaseModel):
     """
@@ -40,7 +42,7 @@ class DomainModel(BaseModel):
     # pydantic配置类，用于控制模型的行为
     class Config(object):
         # 允许通过字典名 id 进行赋值（允许通过字段名或别名初始化）
-        allow_population_by_field_name = True
+        populate_by_name = True
         # 允许使用自定义类型
         arbitrary_types_allowed = True
         # 当对象被转换为json时，将objectId类型转换为字符串

@@ -1,5 +1,4 @@
 import uvicorn
-import sys
 
 import app.main
 
