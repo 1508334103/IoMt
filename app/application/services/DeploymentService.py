@@ -9,7 +9,7 @@ from app.application.dtos.DeploymentDTO import (
 
 class DeploymentService(object):
     """部署应用服务"""
-    def __init__(self, repository: DeploymentRepository):
+    def __init__(self):
         self.repository = DeploymentRepository()
 
     def create_deployment(self, deployment_date: DeploymentCreateDTO) -> DeploymentDTO:
@@ -24,7 +24,7 @@ class DeploymentService(object):
         created_deployment = self.repository.get_by_id(deployment_id)
         return self._convert_to_dto(created_deployment)
 
-    def get_deployment_id(self, deployment_id: str) -> Optional[DeploymentDTO]:
+    def get_deployment_by_id(self, deployment_id: str) -> Optional[DeploymentDTO]:
         """根据ID获取部署"""
         deployment = self.repository.get_by_id(deployment_id)
         if not deployment:
@@ -121,7 +121,7 @@ class DeploymentService(object):
         }
 
         # 添加反馈
-        self.repository.add_feedback_item(deployment_id, feedback_item)
+        self.repository.add_feedback(deployment_id, feedback_item)
         updated_deployment = self.repository.get_by_id(deployment_id)
 
         return self._convert_to_dto(updated_deployment)

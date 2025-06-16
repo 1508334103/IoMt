@@ -1,7 +1,8 @@
 from datetime import datetime, timezone
-from typing import Optional
-from pydantic import BaseModel, Field
+from typing import Optional, Any
+from pydantic import BaseModel, Field, GetCoreSchemaHandler
 from bson import ObjectId
+from pydantic_core import core_schema
 
 
 class PyObjectId(ObjectId):
@@ -9,23 +10,26 @@ class PyObjectId(ObjectId):
     该类存在的意义是，在使用pydantic时，正确处理MongoDB中的ObjectId类型的字段。
     """
 
-    # 返回一个或多个验证器
+    # 用于Pydantic v2中自定义校验器（取代 __get_validators__）
     @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
+    def __get_pydantic_core_schema__(
+        cls, source_type: Any, handler: GetCoreSchemaHandler
+    ) -> core_schema.CoreSchema:
+        return core_schema.no_info_plain_validator_function(cls.validate)
 
     # 用于验证v是否为合法的ObjectId
     @classmethod
-    def validate(cls, v):
+    def validate(cls, v: Any) -> "PyObjectId":
+        if isinstance(v, ObjectId):
+            return cls(str(v))
         if not ObjectId.is_valid(v):
-            raise ValueError("Invalid objectid")
-        return ObjectId(v)
+            raise ValueError("Invalid ObjectId")
+        return cls(v)
 
     # 为了让Swagger文档中，显示该字段为string类型
     @classmethod
-    def __get_pydantic_json_schema__(cls, field_schema):
-        field_schema.update(type="string")
-        return field_schema
+    def __get_pydantic_json_schema__(cls, core_schema, handler):
+        return {"type": "string"}
 
 
 class DomainModel(BaseModel):
